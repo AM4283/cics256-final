@@ -12,6 +12,7 @@ int sequence[10];
 int j = 0; // index of sequence that player is on (SCORE)
 int count = 0; // index of sequence that player is currently on
 int n = 16; // number of Buttons
+// int paused = 0;
 
 int curStates[3];
 int prevStates[3];
@@ -63,6 +64,13 @@ void toggle(int placeVal) {
 int sequenceDone = 0;
 void loop() {
   delay(800);
+  if(Serial.available()) {
+    int paused;
+    Serial.read(paused, 1);
+    while(paused == 1) {
+      delay(1);
+    }
+  }
   if (sequenceDone == 0) {
     for (int i = 0; i<j+1; i++) {
       toggle(sequence[i]);
@@ -85,7 +93,7 @@ void loop() {
       }
     }
   }
-  
+  byte data[] = new byte[3];
   if (isPressed) { 
     if (buttonPressed == sequence[count]) {
       if (count == j) {
@@ -98,6 +106,10 @@ void loop() {
         Serial.println("keep going");
         count++;
       }
+      data[0] = (byte) j;
+      data[1] = (byte) count;
+      data[2] = (byte) 0;
+      Serial.write(data);
     }
     else {
       Serial.println("Wrong!");
@@ -106,6 +118,10 @@ void loop() {
       Serial.println("Try Again!");
       generateSequence(SIZE, n);
       printArr();
+      data[0] = (byte) j;
+      data[1] = (byte) count;
+      data[2] = (byte) 1;
+      Serial.write(data);
       j=0;
       count = 0;
       sequenceDone = 0;
