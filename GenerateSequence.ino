@@ -12,7 +12,6 @@ int sequence[10];
 int j = 0; // index of sequence that player is on (SCORE)
 int count = 0; // index of sequence that player is currently on
 int n = 16; // number of Buttons
-// int paused = 0;
 
 int curStates[3];
 int prevStates[3];
@@ -30,14 +29,8 @@ void setup() {
     trellis.clrLED(i);
   }
   trellis.writeDisplay();
-  // for(byte i=0;i<3;i++) {
-  //   pinMode(buttons[i], INPUT_PULLUP);
-  // }
-  // for (int i=0; i<n; i++) { // Initialize prevStates values to 1 because buttons default to high
-  //   prevStates[i] = 1;
-  // }
+
   generateSequence(SIZE, n);
-  printArr();
 }
 
 void printArr() {
@@ -66,7 +59,8 @@ void loop() {
   delay(800);
   if(Serial.available()) {
     int paused;
-    Serial.read(paused, 1);
+    paused = Serial.read();
+    // Serial.println(paused);
     while(paused == 1) {
       delay(1);
     }
@@ -93,38 +87,34 @@ void loop() {
       }
     }
   }
-  byte data[] = new byte[3];
+  // byte data[3];
   if (isPressed) { 
     if (buttonPressed == sequence[count]) {
       if (count == j) {
-        Serial.println("Correct!");
         j++;
         count = 0;
         sequenceDone = 0;
+        Serial.write(j);
       }
       else {
-        Serial.println("keep going");
         count++;
       }
-      data[0] = (byte) j;
-      data[1] = (byte) count;
-      data[2] = (byte) 0;
-      Serial.write(data);
     }
     else {
-      Serial.println("Wrong!");
-      Serial.print("Final Score: ");
-      Serial.println(j);
-      Serial.println("Try Again!");
+      // Serial.println("Wrong!");
+      // Serial.print("Final Score: ");
+      // Serial.println(j);
+      // Serial.println("Try Again!");
       generateSequence(SIZE, n);
-      printArr();
-      data[0] = (byte) j;
-      data[1] = (byte) count;
-      data[2] = (byte) 1;
-      Serial.write(data);
+      // printArr();
+      // data[0] = (byte) j;
+      // data[1] = (byte) count;
+      // data[2] = (byte) 1;
+      // Serial.write(data, 3);
       j=0;
       count = 0;
       sequenceDone = 0;
+      Serial.write(j);
     }
   }
 }
