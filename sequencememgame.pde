@@ -42,7 +42,8 @@ void draw() {
   }
   text(score.concat(scoreNum), 200, 150);
   if (instruction == 1) {
-    text("help", 150, 400);
+    textFont(createFont("Verdana", 8));
+    text("How to Play:\n Press the LEDs in the same sequence they lit up on the board. After each round, another LED is added to the sequence.\nThe sequence restarts if you press the incorrect LED", 150, 400);
   }
     
 }
