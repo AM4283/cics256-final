@@ -12,12 +12,15 @@ void setup() {
   minim = new Minim(this);
   out = minim.getLineOut();
 }
-
 void draw(){
   if(port.available() > 0){
     int data = port.read(); //reading the data
     println(data);
-    int note = data * 100;
+    //println("HELP");
+    int note = 0;
+    if (data < 16 && data >= 0) {
+       note = data * 100+100;
+    }
     out.playNote(note);
   }  
 }
